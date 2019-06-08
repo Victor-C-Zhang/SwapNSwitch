@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <View
+        android:id="@+id/buttonSeven"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/numbercircle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonFour" />
+
+    <View
+        android:id="@+id/buttonEight"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/numbercircle"
+        app:layout_constraintStart_toEndOf="@+id/buttonSeven"
+        app:layout_constraintTop_toBottomOf="@+id/buttonFour" />
+
+    <View
+        android:id="@+id/buttonSix"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="11dp"
+        android:background="@drawable/numbercircle"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSeven"
+        app:layout_constraintTop_toBottomOf="@+id/buttonFour" />
+
+    <View
+        android:id="@+id/buttonTwo"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="11dp"
+        android:layout_marginBottom="11dp"
+        android:background="@drawable/numbercircle"
+        app:layout_constraintBottom_toTopOf="@+id/buttonFour"
+        app:layout_constraintStart_toEndOf="@+id/buttonOne" />
+
+    <View
+        android:id="@+id/buttonZero"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="11dp"
+        android:background="@drawable/numbercircle"
+        app:layout_constraintBottom_toTopOf="@+id/buttonFour"
+        app:layout_constraintEnd_toStartOf="@+id/buttonOne" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="259dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginBottom="1dp"
+        android:onClick="onStartClick"
+        android:text="START"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_constraintBottom_toTopOf="@+id/settingsButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="102dp"
+        android:layout_marginTop="188dp"
+        android:layout_marginEnd="102dp"
+        android:layout_marginBottom="175dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="Balls On Balls"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/settingsButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="259dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="175dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginBottom="246dp"
+        android:onClick="onSettingsClick"
+        android:text="SETTINGS"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/credits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="131dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="132dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="a game by Victor Zhang"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <View
+        android:id="@+id/buttonOne"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="11dp"
+        android:background="@drawable/numbercircle"
+        app:layout_constraintBottom_toTopOf="@+id/buttonFour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <View
+        android:id="@+id/buttonFour"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:background="@drawable/numbercircle"
+        app:layout_constraintBottom_toTopOf="@+id/startButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/credits" />
+
+    <View
+        android:id="@+id/buttonThree"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="11dp"
+        android:background="@drawable/numbercircle"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonFour"
+        app:layout_constraintEnd_toStartOf="@+id/buttonFour"
+        app:layout_constraintTop_toTopOf="@+id/buttonFour" />
+    <View
+        android:id="@+id/buttonFive"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="11dp"
+        android:background="@drawable/numbercircle"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonFour"
+        app:layout_constraintStart_toEndOf="@+id/buttonFour"
+        app:layout_constraintTop_toTopOf="@+id/buttonFour" />
+</android.support.constraint.ConstraintLayout>
