@@ -1,0 +1,5 @@
+number of levels
+level number
+unlocked (1 == yes, 0 == no)
+stars (0 to 3)
+config

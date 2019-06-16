@@ -34,10 +34,10 @@ import android.widget.TextView;
 
 import com.example.numbergame.customViews.NumberView;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+
 
 public class NumberActivity extends AppCompatActivity {
 
@@ -62,6 +62,7 @@ public class NumberActivity extends AppCompatActivity {
     int width;
     int height;
     int space;
+    int levelNumber;
     private ArrayList<Integer> masterlist = new ArrayList<>();
     Canvas arrows;
     Paint arrowpainter;
@@ -73,6 +74,7 @@ public class NumberActivity extends AppCompatActivity {
 
         //init set-up from memory
         SharedPreferences preferences = getSharedPreferences("NumberGamePreferences", MODE_PRIVATE);
+        levelNumber = preferences.getInt("levelNumber",1);
         for (int i = 0; i<3;i++){
             for (int j=0;j<3;j++){
                 circles[i][j] = (NumberView) findViewById(BUTTON_IDS[i][j]);
