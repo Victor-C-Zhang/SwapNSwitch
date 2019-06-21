@@ -1,1 +1,1 @@
-include ':app', ':gurobi', ':mapp', ':gurobi-javadoc'
+include ':app'

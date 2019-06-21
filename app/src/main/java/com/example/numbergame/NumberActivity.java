@@ -5,15 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -32,12 +28,14 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 
+import com.example.numbergame.customViews.ArrowView;
 import com.example.numbergame.customViews.NumberView;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
+import com.example.numbergame.util.ILPSolver;
+import com.example.numbergame.util.LevelUpdater;
 
 public class NumberActivity extends AppCompatActivity {
 
@@ -63,9 +61,9 @@ public class NumberActivity extends AppCompatActivity {
     int height;
     int space;
     int levelNumber;
+    int minMoves;
     private ArrayList<Integer> masterlist = new ArrayList<>();
-    Canvas arrows;
-    Paint arrowpainter;
+    private ArrayList<ArrowView> arrows = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +73,7 @@ public class NumberActivity extends AppCompatActivity {
         //init set-up from memory
         SharedPreferences preferences = getSharedPreferences("NumberGamePreferences", MODE_PRIVATE);
         levelNumber = preferences.getInt("levelNumber",1);
+        int startConfig[] = new int[9];
         for (int i = 0; i<3;i++){
             for (int j=0;j<3;j++){
                 circles[i][j] = (NumberView) findViewById(BUTTON_IDS[i][j]);
@@ -82,26 +81,28 @@ public class NumberActivity extends AppCompatActivity {
                 int num = preferences.getInt(Integer.toString(i*3+j),0);
                 circles[i][j].setText(Integer.toString(num));
                 masterlist.add(num);
+                startConfig[i*3+j] = num;
                 String s = circles[i][j].toString();
                 Log.d("oopsie",s);
             }
         }
-
-        //get screen sizes
-        Context c = getApplicationContext();
-        Log.d("Context", c.toString());
-        int w = getScreenWidthInDPs(c);
-        int h = getScreenHeightInDPs(c);
-        Log.d("size", w+ " " +h);
-        arrows = new Canvas();
-        arrowpainter = new Paint();
-        arrowpainter.setColor(Color.RED);
-        arrowpainter.setStyle(Paint.Style.FILL_AND_STROKE);
-        arrowpainter.setAntiAlias(true);
-        arrowpainter.setStrokeWidth(2);
+        //init arrows, 16 is enough to draw every possible path on a 4x4 grid
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        for (int i=0;i<16;i++){
+            ArrowView temp = new ArrowView(this);
+            temp.setLayoutParams(new ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    ConstraintLayout.LayoutParams.MATCH_PARENT));
+            arrows.add(temp);
+            constraintLayout.addView(temp);
+        }
+//        minMoves = ILPSolver.squareOptimalMoves(startConfig,
+//                new int[]{1,2,3,4,5,6,7,8,9,});
+        minMoves = 3;
     }
 
     //Methods to get screen width/height in dp
+    //May not be useful to keep around anymore
     public static int getScreenWidthInDPs(Context context){
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
@@ -175,6 +176,7 @@ public class NumberActivity extends AppCompatActivity {
     boolean touch[][] = new boolean[3][3];
     Pair<Integer,Integer> start=null, end=null;
     boolean canExecute = true;
+    int arrowNum = 0;
     @Override
     public boolean onTouchEvent(MotionEvent e){
         int maskedAction = e.getActionMasked();
@@ -182,26 +184,29 @@ public class NumberActivity extends AppCompatActivity {
         Log.d("uwu", base.first.toString() + " " + base.second.toString());
         width = circles[0][0].getWidth();
         height = circles[0][0].getHeight();
-        space = (int) (width*3/7.0);
+        space = (int) (width*3/7.0); //approx (1-1/sqrt2)/(1/sqrt2)
         switch(maskedAction){
-            case MotionEvent.ACTION_DOWN:
-                if (SystemClock.elapsedRealtime()-mLastSwipeTime<500) {
+            case MotionEvent.ACTION_DOWN: {
+                if (SystemClock.elapsedRealtime() - mLastSwipeTime < 500) {
                     canExecute = false;
                     break;
                 }
                 canExecute = true;
-                Log.d("oopsie","down");
+                Log.d("touch", "down");
                 ans = new ArrayList<>();
-                for (int i=0;i<3;i++){
-                    for (int j=0;j<3;j++) touch[i][j] = false;
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 3; j++) touch[i][j] = false;
                 }
                 start = null;
+                arrows.get(arrowNum).init(e.getX(),e.getY());
                 break;
+            }
             case MotionEvent.ACTION_MOVE: {
                 if (!canExecute) break;
+                arrows.get(arrowNum).updateCoords(e.getX(),e.getY());
                 double dx =  e.getX(), dy = e.getY();
                 int x,y;
-                Log.d("woopsie",dx + " " + dy);
+                Log.d("touch",dx + " " + dy);
                 x = (int)Math.floor((dx-base.first)/(width+space));
                 y = (int)Math.floor((dy-base.second)/(height+space));
                 if (x<0 || x>2 || y<0 || y>2) break;
@@ -214,7 +219,8 @@ public class NumberActivity extends AppCompatActivity {
                         circles[y][x].setBackground(getResources().getDrawable(R.drawable.pressed_circle));
                         touch[y][x] = true;
                         end = new Pair<>(y, x);
-                        Log.d("woopsie", x + " " + y);
+                        arrows.get(arrowNum).init((float)(base.first+width/2.0+x*(width+space)),(float)(base.second+height/2.0+y*(height+space)));
+                        Log.d("touch", x + " " + y);
 
                     }
                     else if ((end.first==y && Math.abs(end.second-x)==1) ||
@@ -222,28 +228,15 @@ public class NumberActivity extends AppCompatActivity {
                         ans.add(circles[y][x]);
 
                         //TODO: Fix arrow-painting (when a valid move is made)
-                        int endX = base.first+x*100+35, endY = base.second+y*100+35;
-                        arrows.drawLine(base.first+end.second*100+35, base.second+end.first*100+35,
-                                endX,endY, arrowpainter);
-                        int multiplier = 10;
-                        int xmult = (x-end.second)*multiplier, ymult = (y-end.first)*multiplier;
-                        Point tip = new Point(endX+xmult, endY+ymult);
-                        Point side1 = new Point(endX+ymult,endY+xmult);
-                        Point side2 = new Point(endX-ymult,endY-xmult);
-
-                        Path path = new Path();
-                        path.setFillType(Path.FillType.EVEN_ODD);
-                        path.moveTo(tip.x,tip.y);
-                        path.lineTo(side1.x,side1.y);
-                        path.lineTo(side2.x,side2.y);
-                        path.close();
-
-                        arrows.drawPath(path, arrowpainter);
-
+                        float xCoord = (float)(base.first+width/2.0+x*(width+space)), yCoord =(float)(base.second+height/2.0+y*(height+space));
+                        arrows.get(arrowNum).updateCoords(xCoord,yCoord);
+                        arrowNum++;
+                        arrows.get(arrowNum).init(xCoord,yCoord);
+                        arrows.get(arrowNum).updateCoords(e.getX(),e.getY());
                         end = new Pair<>(y, x);
                         circles[y][x].setBackground(getResources().getDrawable(R.drawable.pressed_circle));
                         touch[y][x] = true;
-                        Log.d("woopsie", x + " " + y);
+                        Log.d("touch", x + " " + y);
                     }
                 }
                 break;
@@ -251,13 +244,15 @@ public class NumberActivity extends AppCompatActivity {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 if (!canExecute) break;
-                Log.d("uwu","up");
+                Log.d("touch","up");
                 mLastSwipeTime = SystemClock.elapsedRealtime();
                 if (ans.size()>3 && (
                         (start.first.equals(end.first) && Math.abs(start.second-end.second)==1) ||
                         (start.second.equals(end.second) && Math.abs(start.first-end.first)==1)
                     ) ) {
-                    for (int i=0;i<ans.size();i++) Log.d("uwu", ans.get(i).toString());
+                    //start rotation sequence
+                    arrows.get(arrowNum).updateCoords(arrows.get(0).getStartX(),arrows.get(0).getStartY());
+                    for (int i=0;i<ans.size();i++) Log.d("touch", ans.get(i).toString());
                     rotation(ans);
                     ((TextView)findViewById(R.id.moves)).setText(Integer.valueOf((Integer.parseInt(((TextView)findViewById(R.id.moves)).getText().toString())+1)).toString());
                     ViewCompat.setBackgroundTintList(findViewById(R.id.undo), ContextCompat.getColorStateList(this, R.color.colorAccent));
@@ -271,6 +266,8 @@ public class NumberActivity extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
+                            for (int i=0;i<=arrowNum;i++) arrows.get(i).reset();
+                            arrowNum = 0;
                             canUndo = true;
                             canReset = true;
                             Collections.reverse(ans);
@@ -290,13 +287,16 @@ public class NumberActivity extends AppCompatActivity {
                                     public void run() {
                                         Log.d("win", "done");
                                         openDialog();
-                                        //displayWin();
                                     }
                                 });
                             }
 
                         }
                     }).start();
+                }
+                else {
+                    for (int i=0;i<=arrowNum;i++) arrows.get(i).reset();
+                    arrowNum = 0;
                 }
                 for (NumberView t: ans){
                     t.setBackground(getResources().getDrawable(R.drawable.numbercircle));
@@ -334,26 +334,7 @@ public class NumberActivity extends AppCompatActivity {
     public void onTestClick(View v){
         //displayWin();
         //openDialog();
-        int x = 1, y = 0;
-        base = new Pair<>(135,755);
-        end = new Pair<>(0,0);
-        int endX = base.first+x*100+35, endY = base.second+y*100+35;
-        arrows.drawLine(base.first+end.second*100+35, base.second+end.first*100+35,
-                endX,endY, arrowpainter);
-        int multiplier = 10;
-        int xmult = (x-end.second)*multiplier, ymult = (y-end.first)*multiplier;
-        Point tip = new Point(endX+xmult, endY+ymult);
-        Point side1 = new Point(endX+ymult,endY+xmult);
-        Point side2 = new Point(endX-ymult,endY-xmult);
 
-        Path path = new Path();
-        path.setFillType(Path.FillType.EVEN_ODD);
-        path.moveTo(tip.x,tip.y);
-        path.lineTo(side1.x,side1.y);
-        path.lineTo(side2.x,side2.y);
-        path.close();
-
-        arrows.drawPath(path, arrowpainter);
     }
     public void onUndoClick(View v){
         if (!canUndo) return;
@@ -386,8 +367,25 @@ public class NumberActivity extends AppCompatActivity {
     }
 
     public void openDialog() {
-        String s = String.format("You completed the puzzle in %s steps. The most efficient solution takes %s steps... Can you find it?",
-                ((TextView)findViewById(R.id.moves)).getText().toString(), "NUMSTEPS");
+        String s;
+        int stars;
+        int movesTaken = Integer.valueOf(((TextView)findViewById(R.id.moves)).getText().toString());
+        if (movesTaken>minMoves) {
+            s = String.format(
+                    "You completed the puzzle in %d steps. The most efficient solution takes %d steps... Can you find it?",
+                    movesTaken, minMoves);
+            int twoStarThreshold = Math.min(minMoves*2,minMoves+4);
+            if (movesTaken>twoStarThreshold) stars = 1;
+            else stars = 2;
+        }
+        else {
+            s= String.format(
+                    "Wow! You found the most efficient solution for level %d, taking only %d steps!", levelNumber, movesTaken);
+            stars = 3;
+        }
+        LevelUpdater lu = new LevelUpdater(getBaseContext());
+        lu.updateNumberLevelStars(levelNumber,stars);
+
         Log.d("Context", this.toString());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Congratulations!")
@@ -397,7 +395,7 @@ public class NumberActivity extends AppCompatActivity {
                         newBoard();
                     }
                 })
-                .setNegativeButton("RETURN", new DialogInterface.OnClickListener() {
+                .setNegativeButton("RETURN TO LEVELS", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         NumberActivity.this.finish();
                     }
@@ -412,27 +410,25 @@ public class NumberActivity extends AppCompatActivity {
         canUndo = false;
         ViewCompat.setBackgroundTintList(findViewById(R.id.undo), ContextCompat.getColorStateList(this, R.color.colorGray));
         ((TextView) findViewById(R.id.moves)).setText("0");
-        //Randomizer
+
         masterlist = new ArrayList<>();
-        ArrayList<Integer> list = new ArrayList<>();
+        masterlist = new ArrayList<>();
+        SharedPreferences preferences = getSharedPreferences("NumberGamePreferences", MODE_PRIVATE);
+        levelNumber = preferences.getInt("levelNumber",1);
+        int startConfig[] = new int[9];
         for (int i = 0; i<3;i++){
             for (int j=0;j<3;j++){
                 circles[i][j] = (NumberView) findViewById(BUTTON_IDS[i][j]);
                 circles[i][j].setGhost(GHOST_IDS[i][j]);
-                list.add(i*3+j+1);
+                int num = preferences.getInt(Integer.toString(i*3+j),0);
+                circles[i][j].setText(Integer.toString(num));
+                masterlist.add(num);
+                startConfig[i*3+j] = num;
                 String s = circles[i][j].toString();
                 Log.d("oopsie",s);
             }
         }
-        Random rn = new Random();
-        for (int i = 0; i<3;i++){
-            for (int j=0;j<3;j++){
-                int n = rn.nextInt(9-i*3-j);
-                circles[i][j].setText(String.valueOf(list.get(n)));
-                masterlist.add(list.get(n));
-                list.remove(n);
-            }
-        }
+        minMoves = 2;
     }
 //    for the lolz
 //    @Override

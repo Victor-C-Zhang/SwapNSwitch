@@ -18,4 +18,11 @@
         <attr name="ghost" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="ArrowView">
+        <attr name="startX" format="float" />
+        <attr name="startY" format="float" />
+        <attr name="endX" format="float" />
+        <attr name="endY" format="float" />
+    </declare-styleable>
+
 </resources>

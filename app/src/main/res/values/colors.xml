@@ -10,4 +10,5 @@
     <color name="colorGrayDark">#979797</color>
     <color name="colorText">#F1F1F1</color>
     <color name="black_overlay">#66000000</color>
+    <color name="arrow_gray">#CCC8C8C8</color>
 </resources>

@@ -102,6 +102,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
+    <Button
+        android:id="@+id/testButton"
+        android:layout_width="259dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="76dp"
+        android:onClick="onTestClick"
+        android:text="TEST"
+        app:backgroundTint="@color/colorGray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settingsButton" />
 
     <TextView
         android:id="@+id/credits"
@@ -155,4 +168,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/buttonFour"
         app:layout_constraintStart_toEndOf="@+id/buttonFour"
         app:layout_constraintTop_toTopOf="@+id/buttonFour" />
+
 </android.support.constraint.ConstraintLayout>

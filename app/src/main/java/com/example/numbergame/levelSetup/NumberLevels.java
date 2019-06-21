@@ -31,7 +31,7 @@ public class NumberLevels extends AppCompatActivity {
         Log.d("FILENAME", fileName);
 
         File file = new File(fileName);
-        if (!file.exists()) {
+        if (!file.exists()) { //switch to file.exists() to reconfigure numberFile
             try{
                 AssetManager am = this.getAssets();
                 sc = new Scanner(am.open("initNumberFile.txt"));
@@ -58,8 +58,8 @@ public class NumberLevels extends AppCompatActivity {
             int unlocked = sc.nextInt();
             if (unlocked==0) {
                 sc.nextLine();
-                sc.nextLine();
-                sc.nextLine();
+                sc.nextLine(); //numstars
+                sc.nextLine(); //config
                 arr.add(new Level());
             }
             else {

@@ -8,7 +8,6 @@ public class Level {
     private int[][] config;
     private int stars;
     private boolean unlocked;
-
     /**
      * Inits a generic level
      * @param number the level number
@@ -51,5 +50,4 @@ public class Level {
     }
     public boolean isUnlocked(){return unlocked;}
     public int[][] getConfig(){return config;}
-
 }
