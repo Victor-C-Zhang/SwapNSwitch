@@ -4,76 +4,76 @@
         <shape android:shape="rectangle">
             <size android:height="300dp" android:width="300dp"/>
             <stroke android:width="2dp" android:color="#E1E1E1"/>
-            <solid android:color="@android:color/transparent"/>
+            <solid android:color="@android:color/white"/>
         </shape>
     </item>
     <!--Row 1-->
     <!--<item android:bottom="200dp" android:right="200dp">-->
-        <!--<shape android:shape="rectangle">-->
-            <!--<size android:height="100dp" android:width="100dp"/>-->
-            <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
-            <!--<solid android:color="@android:color/transparent"/>-->
-        <!--</shape>-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<size android:height="100dp" android:width="100dp"/>-->
+    <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
+    <!--<solid android:color="@android:color/transparent"/>-->
+    <!--</shape>-->
     <!--</item>-->
     <!--<item android:bottom="200dp" android:right="100dp">-->
-        <!--<shape android:shape="rectangle">-->
-            <!--<size android:height="100dp" android:width="100dp"/>-->
-            <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
-            <!--<solid android:color="@android:color/transparent"/>-->
-        <!--</shape>-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<size android:height="100dp" android:width="100dp"/>-->
+    <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
+    <!--<solid android:color="@android:color/transparent"/>-->
+    <!--</shape>-->
     <!--</item>-->
     <!--<item android:bottom="200dp" >-->
-        <!--<shape android:shape="rectangle">-->
-            <!--<size android:height="100dp" android:width="100dp"/>-->
-            <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
-            <!--<solid android:color="@android:color/transparent"/>-->
-        <!--</shape>-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<size android:height="100dp" android:width="100dp"/>-->
+    <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
+    <!--<solid android:color="@android:color/transparent"/>-->
+    <!--</shape>-->
     <!--</item>-->
 
     <!--&lt;!&ndash;Row 2&ndash;&gt;-->
     <!--<item android:bottom="100dp" android:right="200dp">-->
-        <!--<shape android:shape="rectangle">-->
-            <!--<size android:height="100dp" android:width="100dp"/>-->
-            <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
-            <!--<solid android:color="@android:color/transparent"/>-->
-        <!--</shape>-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<size android:height="100dp" android:width="100dp"/>-->
+    <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
+    <!--<solid android:color="@android:color/transparent"/>-->
+    <!--</shape>-->
     <!--</item>-->
     <!--<item android:bottom="100dp" android:right="100dp">-->
-        <!--<shape android:shape="rectangle">-->
-            <!--<size android:height="100dp" android:width="100dp"/>-->
-            <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
-            <!--<solid android:color="@android:color/transparent"/>-->
-        <!--</shape>-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<size android:height="100dp" android:width="100dp"/>-->
+    <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
+    <!--<solid android:color="@android:color/transparent"/>-->
+    <!--</shape>-->
     <!--</item>-->
     <!--<item android:bottom="100dp" android:left="200dp">-->
-        <!--<shape android:shape="rectangle">-->
-            <!--<size android:height="100dp" android:width="100dp"/>-->
-            <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
-            <!--<solid android:color="@android:color/transparent"/>-->
-        <!--</shape>-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<size android:height="100dp" android:width="100dp"/>-->
+    <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
+    <!--<solid android:color="@android:color/transparent"/>-->
+    <!--</shape>-->
     <!--</item>-->
 
     <!--&lt;!&ndash;Row 3&ndash;&gt;-->
     <!--<item android:top="100dp" android:right="200dp">-->
-        <!--<shape android:shape="rectangle">-->
-            <!--<size android:height="100dp" android:width="100dp"/>-->
-            <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
-            <!--<solid android:color="@android:color/transparent"/>-->
-        <!--</shape>-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<size android:height="100dp" android:width="100dp"/>-->
+    <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
+    <!--<solid android:color="@android:color/transparent"/>-->
+    <!--</shape>-->
     <!--</item>-->
     <!--<item android:top="100dp" android:right="100dp">-->
-        <!--<shape android:shape="rectangle">-->
-            <!--<size android:height="100dp" android:width="100dp"/>-->
-            <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
-            <!--<solid android:color="@android:color/transparent"/>-->
-        <!--</shape>-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<size android:height="100dp" android:width="100dp"/>-->
+    <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
+    <!--<solid android:color="@android:color/transparent"/>-->
+    <!--</shape>-->
     <!--</item>-->
     <!--<item android:top="100dp" android:left="200dp">-->
-        <!--<shape android:shape="rectangle">-->
-            <!--<size android:height="100dp" android:width="100dp"/>-->
-            <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
-            <!--<solid android:color="@android:color/transparent"/>-->
-        <!--</shape>-->
+    <!--<shape android:shape="rectangle">-->
+    <!--<size android:height="100dp" android:width="100dp"/>-->
+    <!--<stroke android:width="2dp" android:color="#E1E1E1"/>-->
+    <!--<solid android:color="@android:color/transparent"/>-->
+    <!--</shape>-->
     <!--</item>-->
     <item android:top="100dp">
         <shape android:shape="line">

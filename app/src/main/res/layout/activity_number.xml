@@ -11,7 +11,7 @@
         android:id="@+id/grid"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:background="@drawable/three_by_three_grid"
+        android:background="@drawable/three_by_three_grid_transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -323,6 +323,7 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonZero"
         app:layout_constraintStart_toStartOf="@+id/buttonZero" />
 
+
     <Button
         android:id="@+id/moves"
         style="@style/Widget.AppCompat.Button.Colored"
@@ -338,5 +339,32 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonZero"
         app:layout_constraintStart_toStartOf="@+id/buttonZero" />
 
+    <com.example.numbergame.customViews.CustomTextView
+        android:id="@+id/goal"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="41dp"
+        android:layout_marginStart="-30dp"
+        android:layout_marginBottom="70dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="GOAL"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
+        app:backgroundTint="@color/colorAccentDark"
+        app:layout_constraintBottom_toTopOf="@+id/ghostTwo"
+        app:layout_constraintStart_toStartOf="@+id/ghostTwo" />
+    <View
+        android:id="@+id/dimmer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:alpha="0.0"/>
+
+    <FrameLayout
+        android:id="@+id/placehholderFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

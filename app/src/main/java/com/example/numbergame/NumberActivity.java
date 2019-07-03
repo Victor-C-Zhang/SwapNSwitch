@@ -1,15 +1,16 @@
 package com.example.numbergame;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -29,15 +31,15 @@ import android.widget.TextView;
 
 
 import com.example.numbergame.customViews.ArrowView;
+import com.example.numbergame.customViews.CustomTextView;
 import com.example.numbergame.customViews.NumberView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.example.numbergame.util.ILPSolver;
 import com.example.numbergame.util.LevelUpdater;
 
-public class NumberActivity extends AppCompatActivity {
+public class NumberActivity extends AppCompatActivity implements GoalFragment.OnFragmentInteractionListener {
 
     private NumberView circles[][] = new NumberView[3][3];
     private long mLastClickTime = 0;
@@ -54,6 +56,7 @@ public class NumberActivity extends AppCompatActivity {
     };
     private ArrayList<NumberView> last;
     private Handler handler = new Handler();
+    private GoalFragment goalFrag;
     private boolean canUndo = false;
     private boolean canReset = false;
     static Pair<Integer,Integer> base;
@@ -63,6 +66,7 @@ public class NumberActivity extends AppCompatActivity {
     int levelNumber;
     int minMoves;
     private ArrayList<Integer> masterlist = new ArrayList<>();
+    private ArrayList<Integer> goalList = new ArrayList<>();
     private ArrayList<ArrowView> arrows = new ArrayList<>();
 
     @Override
@@ -86,6 +90,14 @@ public class NumberActivity extends AppCompatActivity {
                 Log.d("oopsie",s);
             }
         }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        goalFrag = new GoalFragment();
+        ft.replace(R.id.placehholderFrame, goalFrag);
+        ft.commit();
+        ft = getSupportFragmentManager().beginTransaction();
+        ft.hide(goalFrag);
+        ft.commit();
+        ((CustomTextView)findViewById(R.id.goal)).setGoal(goalFrag);
         //init arrows, 16 is enough to draw every possible path on a 4x4 grid
         ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
         for (int i=0;i<16;i++){
@@ -96,6 +108,11 @@ public class NumberActivity extends AppCompatActivity {
             arrows.add(temp);
             constraintLayout.addView(temp);
         }
+
+        //temporary
+        int arr[] = new int[]{1,2,3,4,5,6,7,8,9};
+        for (int i=0;i<9;i++) goalList.add(arr[i]);
+
 //        minMoves = ILPSolver.squareOptimalMoves(startConfig,
 //                new int[]{1,2,3,4,5,6,7,8,9,});
         minMoves = 3;
@@ -276,7 +293,7 @@ public class NumberActivity extends AppCompatActivity {
                             for (int i=0;i<3;i++) {
                                 for (int j = 0; j < 3; j++) {
                                     Log.d("Circle" + i + " " + j, circles[i][j].getText().toString());
-                                    if (Integer.parseInt(circles[i][j].getText().toString())!=i*3+j+1) done = false;
+                                    if (Integer.parseInt(circles[i][j].getText().toString())!=goalList.get(i*3+j)) done = false;
                                     if (!done) break;
                                 }
                                 if (!done) break;
@@ -429,6 +446,18 @@ public class NumberActivity extends AppCompatActivity {
             }
         }
         minMoves = 2;
+    }
+
+    public void onInitGoal(ArrayList<Integer> goalList){
+        if (goalFrag != null) {
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    goalFrag.viewIDs[i][j].setText(Integer.toString(goalList.get(i * 3 + j)));
+            goalFrag.init();
+        }
+    }
+    public void initGoal(){
+        onInitGoal(goalList);
     }
 //    for the lolz
 //    @Override

@@ -10,7 +10,7 @@
         android:id="@+id/grid"
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:background="@drawable/three_by_three_grid"
+        android:background="@drawable/three_by_three_grid_transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

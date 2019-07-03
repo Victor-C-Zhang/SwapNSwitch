@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Pair;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -102,7 +100,7 @@ public class ArrowView extends View {
             arrowPath.rLineTo(2 * scaleFactor * (float) Math.cos(theta + Math.PI / 2.0), 2 * scaleFactor * (float) Math.sin(theta + Math.PI / 2.0));
             arrowPath.rLineTo(endX - startX - 8 * scaleFactor * (float) Math.cos(theta), endY - startY - 8 * scaleFactor * (float) Math.sin(theta)); //shaft
             arrowPath.rLineTo(6 * scaleFactor * (float) Math.cos(theta + Math.PI / 2.0), 6 * scaleFactor * (float) Math.sin(theta + Math.PI / 2.0)); //arrow out
-            arrowPath.rLineTo(11.31370849898f * scaleFactor * (float) Math.cos(theta - Math.PI / 4.0), 11.31370849898f * scaleFactor * (float) Math.sin(theta - Math.PI / 4.0)); //arrow \
+            arrowPath.rLineTo(11.31370849898f * scaleFactor * (float) Math.cos(theta - Math.PI / 4.0), 11.31370849898f * scaleFactor * (float) Math.sin(theta - Math.PI / 4.0));             //arrow \
             arrowPath.rLineTo(11.31370849898f * scaleFactor * (float) Math.cos(theta + 5.0 * Math.PI / 4.0), 11.31370849898f * scaleFactor * (float) Math.sin(theta + 5.0 * Math.PI / 4.0)); //arrow /
             arrowPath.rLineTo(6 * scaleFactor * (float) Math.cos(theta + Math.PI / 2.0), 6 * scaleFactor * (float) Math.sin(theta + Math.PI / 2.0)); //arrow in
             arrowPath.rLineTo(startX - endX + 8 * scaleFactor * (float) Math.cos(theta), startY - endY + 8 * scaleFactor * (float) Math.sin(theta)); //shaft
