@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Level {
+
+    public static final int MODE_NUMBER = 1;
+    public static final int MODE_RED_BLUE = 2;
+
+    private int mode;
     private int levelNumber;
     private int[][] config;
     private int stars;
@@ -18,10 +23,11 @@ public class Level {
      * @param stars whether the level has been solved
      * @param unlocked if the level is unlocked or not
      */
-    public Level(int number, String s, int stars, boolean unlocked){
+    public Level(int number, String s, int stars, boolean unlocked, int mode){
         levelNumber=number;
         this.stars = stars;
         this.unlocked = unlocked;
+        this.mode = mode;
         Scanner sc = new Scanner(s);
         ArrayList<Integer> arr = new ArrayList<>();
         while (sc.hasNextInt()) arr.add(sc.nextInt());
@@ -32,8 +38,8 @@ public class Level {
             for (int j=0;j<dim;j++)
                 config[i][j]=arr.get(i*dim+j);
     }
-    public Level(int number, String s){
-        this(number,s,0,true);
+    public Level(int number, String s, int mode){
+        this(number,s,0,true,mode);
     }
 
     /**
@@ -43,6 +49,7 @@ public class Level {
         unlocked = false;
     }
     public int getLevelNumber(){return levelNumber;}
+    public int getMode(){return mode;}
     public int numStars(){
         // error output -1
         if (stars <0 || stars > 3) return -1;

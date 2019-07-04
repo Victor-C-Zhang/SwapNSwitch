@@ -1,7 +1,6 @@
 package com.example.numbergame;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -22,7 +21,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
@@ -31,7 +29,7 @@ import android.widget.TextView;
 
 
 import com.example.numbergame.customViews.ArrowView;
-import com.example.numbergame.customViews.CustomTextView;
+import com.example.numbergame.customViews.CustomTextNumberView;
 import com.example.numbergame.customViews.NumberView;
 
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ import java.util.Collections;
 
 import com.example.numbergame.util.LevelUpdater;
 
-public class NumberActivity extends AppCompatActivity implements GoalFragment.OnFragmentInteractionListener {
+public class NumberActivity extends AppCompatActivity implements NumberGoalFragment.OnFragmentInteractionListener {
 
     private NumberView circles[][] = new NumberView[3][3];
     private long mLastClickTime = 0;
@@ -56,7 +54,7 @@ public class NumberActivity extends AppCompatActivity implements GoalFragment.On
     };
     private ArrayList<NumberView> last;
     private Handler handler = new Handler();
-    private GoalFragment goalFrag;
+    private NumberGoalFragment goalFrag;
     private boolean canUndo = false;
     private boolean canReset = false;
     static Pair<Integer,Integer> base;
@@ -90,14 +88,15 @@ public class NumberActivity extends AppCompatActivity implements GoalFragment.On
                 Log.d("oopsie",s);
             }
         }
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        goalFrag = new GoalFragment();
+        goalFrag = new NumberGoalFragment();
         ft.replace(R.id.placehholderFrame, goalFrag);
         ft.commit();
         ft = getSupportFragmentManager().beginTransaction();
         ft.hide(goalFrag);
         ft.commit();
-        ((CustomTextView)findViewById(R.id.goal)).setGoal(goalFrag);
+        ((CustomTextNumberView)findViewById(R.id.goal)).setGoal(goalFrag);
         //init arrows, 16 is enough to draw every possible path on a 4x4 grid
         ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
         for (int i=0;i<16;i++){
@@ -244,7 +243,6 @@ public class NumberActivity extends AppCompatActivity implements GoalFragment.On
                         (end.second==x && Math.abs(end.first-y)==1) ){
                         ans.add(circles[y][x]);
 
-                        //TODO: Fix arrow-painting (when a valid move is made)
                         float xCoord = (float)(base.first+width/2.0+x*(width+space)), yCoord =(float)(base.second+height/2.0+y*(height+space));
                         arrows.get(arrowNum).updateCoords(xCoord,yCoord);
                         arrowNum++;
@@ -428,7 +426,6 @@ public class NumberActivity extends AppCompatActivity implements GoalFragment.On
         ViewCompat.setBackgroundTintList(findViewById(R.id.undo), ContextCompat.getColorStateList(this, R.color.colorGray));
         ((TextView) findViewById(R.id.moves)).setText("0");
 
-        masterlist = new ArrayList<>();
         masterlist = new ArrayList<>();
         SharedPreferences preferences = getSharedPreferences("NumberGamePreferences", MODE_PRIVATE);
         levelNumber = preferences.getInt("levelNumber",1);

@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -27,16 +29,19 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 
+import com.example.numbergame.customViews.ArrowView;
+import com.example.numbergame.customViews.CustomTextRedBlueView;
 import com.example.numbergame.customViews.RedBlueView;
+import com.example.numbergame.util.LevelUpdater;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-public class RedBlueActivity extends AppCompatActivity {
+public class RedBlueActivity extends AppCompatActivity implements RedBlueGoalFragment.OnFragmentInteractionListener {
 
     //TODO: think about "program flow"
-    /*start screen with splash art
+    /**start screen with splash art
     * start, tutorial, settings, credits
     * when hit "play", bring to the level selector screen, gray levels that you can't play
     * don't record too much progress, but...
@@ -64,83 +69,82 @@ public class RedBlueActivity extends AppCompatActivity {
 
     private ArrayList<RedBlueView> last;
     private Handler handler = new Handler();
+    private RedBlueGoalFragment goalFrag;
     private boolean canUndo = false;
     private boolean canReset = false;
     static Pair<Integer,Integer> base;
     int width;
     int height;
     int space;
-    private static final boolean masterfinish[][] = {
-            {true,true,true,},
-            {true,true,false,},
-            {false,false,false,},
-    };
-    private boolean masterlist[][] = new boolean[3][3];
+    int levelNumber;
+    int minMoves;
+    private ArrayList<Boolean> masterlist = new ArrayList<>();
+    private ArrayList<Boolean> goalList = new ArrayList<>();
+    private ArrayList<ArrowView> arrows = new ArrayList<>();
 
-    //TODO: blue = true, red = false;
+    /**
+     * blue = true, red = false;
+     * @param savedInstanceState yee
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_red_blue);
-        //Randomizer
 
-        int arr[] = {5,4};
-        Random rn = new Random();
+        SharedPreferences preferences = getSharedPreferences("NumberGamePreferences", MODE_PRIVATE);
+        levelNumber = preferences.getInt("levelNumber",1);
+        int startConfig[] = new int[9];
         for (int i = 0; i<3;i++){
             for (int j=0;j<3;j++){
                 circles[i][j] = (RedBlueView) findViewById(BUTTON_IDS[i][j]);
                 circles[i][j].setGhost(GHOST_IDS[i][j]);
-                String s = circles[i][j].toString();
-                Log.d("oopsie",s);
-                if (rn.nextBoolean()){
-                    if (arr[0]!=0) {
-                        circles[i][j].setBackground(getResources().getDrawable(R.drawable.blue_circle));
-                        circles[i][j].setBlue(true);
-                        arr[0]--;
-                        masterlist[i][j]=true;
-                    }
-                    else {
-                        circles[i][j].setBackground(getResources().getDrawable(R.drawable.red_circle));
-                        circles[i][j].setBlue(false);
-                        arr[1]--;
-                        masterlist[i][j] = false;
-                    }
+                int num = preferences.getInt(Integer.toString(i*3+j),0);
+                if (num==1) {
+                    circles[i][j].setBackground(getResources().getDrawable(R.drawable.blue_circle));
+                    circles[i][j].setBlue(true);
+                    masterlist.add(true);
                 }
                 else {
-                    if (arr[1]!=0) {
-                        circles[i][j].setBackground(getResources().getDrawable(R.drawable.red_circle));
-                        circles[i][j].setBlue(false);
-                        arr[1]--;
-                        masterlist[i][j] = false;
-                    }
-                    else {
-                        circles[i][j].setBackground(getResources().getDrawable(R.drawable.blue_circle));
-                        circles[i][j].setBlue(true);
-                        arr[0]--;
-                        masterlist[i][j]=true;
-                    }
+                    circles[i][j].setBackground(getResources().getDrawable(R.drawable.red_circle));
+                    circles[i][j].setBlue(false);
+                    masterlist.add(false);
                 }
+                startConfig[i*3+j] = num;
+                String s = circles[i][j].toString();
+                Log.d("oopsie",s);
             }
         }
 
-        //TODO: fix up init of RedBlueGame
-//        SharedPreferences preferences = getSharedPreferences("NumberGamePreferences", MODE_PRIVATE);
-//        for (int i = 0; i<3;i++){
-//            for (int j=0;j<3;j++){
-//                circles[i][j] = (RedBlueView) findViewById(BUTTON_IDS[i][j]);
-//                circles[i][j].setGhost(GHOST_IDS[i][j]);
-//                int num = preferences.getInt(Integer.toString(i*3+j),0);
-//                masterlist.add(num);
-//                String s = circles[i][j].toString();
-//                Log.d("oopsie",s);
-//            }
-//        }
-        //get screen sizes
-        Context c = getApplicationContext();
-        Log.d("Context", c.toString());
-        int w = getScreenWidthInDPs(c);
-        int h = getScreenHeightInDPs(c);
-        Log.d("size", w+ " " +h);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        goalFrag = new RedBlueGoalFragment();
+        ft.replace(R.id.placehholderFrame, goalFrag);
+        ft.commit();
+        ft = getSupportFragmentManager().beginTransaction();
+        ft.hide(goalFrag);
+        ft.commit();
+        ((CustomTextRedBlueView)findViewById(R.id.goal)).setGoal(goalFrag);
+        //init arrows, 16 is enough to draw every possible path on a 4x4 grid
+        ConstraintLayout constraintLayout = findViewById(R.id.constraintLayout);
+        for (int i=0;i<16;i++){
+            ArrowView temp = new ArrowView(this);
+            temp.setLayoutParams(new ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    ConstraintLayout.LayoutParams.MATCH_PARENT));
+            arrows.add(temp);
+            constraintLayout.addView(temp);
+        }
+
+        //temporary
+        boolean arr[] = {
+                true,true,true,
+                true,true,false,
+                false,false,false
+        };
+        for (int i=0;i<9;i++) goalList.add(arr[i]);
+
+//        minMoves = ILPSolver.squareOptimalMoves(startConfig,
+//                new int[]{1,2,3,4,5,6,7,8,9,});
+        minMoves = 3;
 
     }
 
@@ -170,33 +174,6 @@ public class RedBlueActivity extends AppCompatActivity {
         t.setFillAfter(true);
         b.startAnimation(t);
     }
-
-//    protected void rotation(final ArrayList<RedBlueView> rects){
-//        RedBlueView p,q;
-//        for (int i=0;i<rects.size();i++){
-//            p = rects.get(i);
-//            q = rects.get((i+1)%rects.size());
-//            translate(p,q);
-//        }
-//        final Drawable d = rects.get(rects.size()-1).getBackground();
-//        final boolean b = rects.get(rects.size()-1).isBlue();
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    Thread.sleep(320);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                for (int i=rects.size()-1;i>0;i--){
-//                    rects.get(i).setBackground(rects.get(i-1).getBackground());
-//                    rects.get(i).setBlue(rects.get(i-1).isBlue());
-//                }
-//                rects.get(0).setBackground(d);
-//                rects.get(0).setBlue(b);
-//            }
-//        }).start();
-//    }
 
     /**
      * Internal method used to execute the animation
@@ -253,7 +230,7 @@ public class RedBlueActivity extends AppCompatActivity {
     boolean touch[][] = new boolean[3][3];
     Pair<Integer,Integer> start=null, end=null;
     boolean canExecute = true;
-
+    int arrowNum = 0;
     @Override
     public boolean onTouchEvent(MotionEvent e){
         int maskedAction = e.getActionMasked();
@@ -275,9 +252,11 @@ public class RedBlueActivity extends AppCompatActivity {
                     for (int j=0;j<3;j++) touch[i][j] = false;
                 }
                 start = null;
+                arrows.get(arrowNum).init(e.getX(),e.getY());
                 break;
             case MotionEvent.ACTION_MOVE: {
                 if (!canExecute) break;
+                arrows.get(arrowNum).updateCoords(e.getX(),e.getY());
                 double dx =  e.getX(), dy = e.getY();
                 int x,y;
                 Log.d("woopsie",dx + " " + dy);
@@ -295,12 +274,18 @@ public class RedBlueActivity extends AppCompatActivity {
                         else circles[y][x].setBackground(getResources().getDrawable(R.drawable.pressed_red_circle));
                         touch[y][x] = true;
                         end = new Pair<>(y, x);
+                        arrows.get(arrowNum).init((float)(base.first+width/2.0+x*(width+space)),(float)(base.second+height/2.0+y*(height+space)));
                         Log.d("woopsie", x + " " + y);
 
                     }
                     else if ((end.first==y && Math.abs(end.second-x)==1) ||
                             (end.second==x && Math.abs(end.first-y)==1) ){
                         ans.add(circles[y][x]);
+                        float xCoord = (float)(base.first+width/2.0+x*(width+space)), yCoord =(float)(base.second+height/2.0+y*(height+space));
+                        arrows.get(arrowNum).updateCoords(xCoord,yCoord);
+                        arrowNum++;
+                        arrows.get(arrowNum).init(xCoord,yCoord);
+                        arrows.get(arrowNum).updateCoords(e.getX(),e.getY());
                         end = new Pair<>(y, x);
                         if (circles[y][x].isBlue())
                             circles[y][x].setBackground(getResources().getDrawable(R.drawable.pressed_blue_circle));
@@ -326,6 +311,9 @@ public class RedBlueActivity extends AppCompatActivity {
                         (start.first.equals(end.first) && Math.abs(start.second-end.second)==1) ||
                                 (start.second.equals(end.second) && Math.abs(start.first-end.first)==1)
                 ) ) {
+                    //start rotation sequence
+                    arrows.get(arrowNum).updateCoords(arrows.get(0).getStartX(),arrows.get(0).getStartY());
+
                     for (int i=0;i<ans.size();i++) Log.d("uwu", ans.get(i).toString());
                     rotation(ans);
                     ((TextView)findViewById(R.id.moves)).setText(Integer.valueOf((Integer.parseInt(((TextView)findViewById(R.id.moves)).getText().toString())+1)).toString());
@@ -340,6 +328,8 @@ public class RedBlueActivity extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
+                            for (int i=0;i<=arrowNum;i++) arrows.get(i).reset();
+                            arrowNum = 0;
                             canUndo = true;
                             canReset = true;
                             Collections.reverse(ans);
@@ -348,7 +338,7 @@ public class RedBlueActivity extends AppCompatActivity {
                             for (int i=0;i<3;i++) {
                                 for (int j = 0; j < 3; j++) {
                                     Log.d("Circle" + i + " " + j, String.valueOf(circles[i][j].isBlue()));
-                                    if (masterfinish[i][j]!=circles[i][j].isBlue()) done = false;
+                                    if (goalList.get(i*3+j)!=circles[i][j].isBlue()) done = false;
                                     if (!done) break;
                                 }
                                 if (!done) break;
@@ -366,6 +356,10 @@ public class RedBlueActivity extends AppCompatActivity {
 
                         }
                     }).start();
+                }
+                else {
+                    for (int i=0;i<=arrowNum;i++) arrows.get(i).reset();
+                    arrowNum = 0;
                 }
                 break;
 
@@ -398,7 +392,7 @@ public class RedBlueActivity extends AppCompatActivity {
         pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
     }
     public void onTestClick(View v){
-        displayWin();
+        //displayWin();
         //openDialog();
     }
     public void onUndoClick(View v){
@@ -424,7 +418,7 @@ public class RedBlueActivity extends AppCompatActivity {
         }
         for (int i=0;i<3;i++){
             for (int j=0;j<3;j++){
-                if (masterlist[i][j]) {
+                if (masterlist.get(i*3+j)) {
                     circles[i][j].setBackground(getResources().getDrawable(R.drawable.blue_circle));
                     circles[i][j].setBlue(true);
                 }
@@ -442,19 +436,35 @@ public class RedBlueActivity extends AppCompatActivity {
     }
 
     public void openDialog() {
-        String s = String.format("You completed the puzzle in %s steps. The most efficient solution takes %s steps... Can you find it?",
-                ((TextView)findViewById(R.id.moves)).getText().toString(), "NUMSTEPS");
+        String s;
+        int stars;
+        int movesTaken = Integer.valueOf(((TextView)findViewById(R.id.moves)).getText().toString());
+        if (movesTaken>minMoves) {
+            s = String.format(
+                    "You completed the puzzle in %d steps. The most efficient solution takes %d steps... Can you find it?",
+                    movesTaken, minMoves);
+            int twoStarThreshold = Math.min(minMoves*2,minMoves+4);
+            if (movesTaken>twoStarThreshold) stars = 1;
+            else stars = 2;
+        }
+        else {
+            s= String.format(
+                    "Wow! You found the most efficient solution for level %d, taking only %d steps!", levelNumber, movesTaken);
+            stars = 3;
+        }
+        LevelUpdater lu = new LevelUpdater(getBaseContext());
+        lu.updateRedBlueLevelStars(levelNumber,stars);
+
         Log.d("Context", this.toString());
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Congratulations!")
                 .setMessage(s)
                 .setPositiveButton("THANK YOU NEXT ! !", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        //TODO: Re-randomize layout and store in the master list, re-init everything
                         newBoard();
                     }
                 })
-                .setNegativeButton("RETURN", new DialogInterface.OnClickListener() {
+                .setNegativeButton("RETURN TO LEVELS", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         RedBlueActivity.this.finish();
                     }
@@ -469,44 +479,44 @@ public class RedBlueActivity extends AppCompatActivity {
         canUndo = false;
         ViewCompat.setBackgroundTintList(findViewById(R.id.undo), ContextCompat.getColorStateList(this, R.color.colorGray));
         ((TextView) findViewById(R.id.moves)).setText("0");
-        //Randomizer
-        int arr[] = {5,4};
-        Random rn = new Random();
+
+        masterlist = new ArrayList<>();
+        SharedPreferences preferences = getSharedPreferences("RedBlueGamePreferences", MODE_PRIVATE);
+        levelNumber = preferences.getInt("levelNumber",1);
+        int startConfig[] = new int[9];
         for (int i = 0; i<3;i++){
             for (int j=0;j<3;j++){
                 circles[i][j] = (RedBlueView) findViewById(BUTTON_IDS[i][j]);
-                String s = circles[i][j].toString();
-                Log.d("oopsie",s);
-                if (rn.nextBoolean()){
-                    if (arr[0]!=0) {
-                        circles[i][j].setBackground(getResources().getDrawable(R.drawable.blue_circle));
-                        circles[i][j].setBlue(true);
-                        arr[0]--;
-                        masterlist[i][j]=true;
-                    }
-                    else {
-                        circles[i][j].setBackground(getResources().getDrawable(R.drawable.red_circle));
-                        circles[i][j].setBlue(false);
-                        arr[1]--;
-                        masterlist[i][j] = false;
-                    }
+                circles[i][j].setGhost(GHOST_IDS[i][j]);
+                int num = preferences.getInt(Integer.toString(i*3+j),0);
+                if (num==1) {
+                    circles[i][j].setBackground(getResources().getDrawable(R.drawable.blue_circle));
+                    circles[i][j].setBlue(true);
+                    masterlist.add(true);
                 }
                 else {
-                    if (arr[1]!=0) {
-                        circles[i][j].setBackground(getResources().getDrawable(R.drawable.red_circle));
-                        circles[i][j].setBlue(false);
-                        arr[1]--;
-                        masterlist[i][j] = false;
-                    }
-                    else {
-                        circles[i][j].setBackground(getResources().getDrawable(R.drawable.blue_circle));
-                        circles[i][j].setBlue(true);
-                        arr[0]--;
-                        masterlist[i][j]=true;
-                    }
+                    circles[i][j].setBackground(getResources().getDrawable(R.drawable.red_circle));
+                    circles[i][j].setBlue(false);
+                    masterlist.add(false);
                 }
+                startConfig[i*3+j] = num;
+                String s = circles[i][j].toString();
+                Log.d("oopsie",s);
             }
         }
+        minMoves = 2;
+    }
+
+    public void onInitGoal(ArrayList<Boolean> goalList){
+        if (goalFrag != null) {
+            for (int i = 0; i < 3; i++)
+                for (int j = 0; j < 3; j++)
+                    if (!goalList.get(i*3+j)) goalFrag.viewIDs[i][j].setBackground(getResources().getDrawable(R.drawable.red_circle));
+            goalFrag.init();
+        }
+    }
+    public void initGoal(){
+        onInitGoal(goalList);
     }
 //    for the lolz
 //    @Override

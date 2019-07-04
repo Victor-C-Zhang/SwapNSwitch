@@ -1,7 +1,6 @@
 package com.example.numbergame;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,12 +15,12 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link GoalFragment.OnFragmentInteractionListener} interface
+ * {@link NumberGoalFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link GoalFragment#newInstance} factory method to
+ * Use the {@link NumberGoalFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GoalFragment extends android.support.v4.app.Fragment {
+public class NumberGoalFragment extends android.support.v4.app.Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 //    private static final String ARG_PARAM1 = "param1";
@@ -36,7 +35,7 @@ public class GoalFragment extends android.support.v4.app.Fragment {
     private boolean inited;
     private OnFragmentInteractionListener mListener;
 
-    public GoalFragment() {
+    public NumberGoalFragment() {
         // Required empty public constructor
     }
 
@@ -44,11 +43,11 @@ public class GoalFragment extends android.support.v4.app.Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @return A new instance of fragment GoalFragment.
+     * @return A new instance of fragment NumberGoalFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GoalFragment newInstance() {
-        GoalFragment fragment = new GoalFragment();
+    public static NumberGoalFragment newInstance() {
+        NumberGoalFragment fragment = new NumberGoalFragment();
 //        Bundle args = new Bundle();
 //        args.putString(ARG_PARAM1, param1);
 //        args.putString(ARG_PARAM2, param2);
@@ -65,7 +64,7 @@ public class GoalFragment extends android.support.v4.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_goal, container, false);
+        View root = inflater.inflate(R.layout.fragment_goal_number, container, false);
         viewIDs = new NumberView[3][3];
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)

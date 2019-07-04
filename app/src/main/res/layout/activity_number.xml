@@ -339,7 +339,7 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonZero"
         app:layout_constraintStart_toStartOf="@+id/buttonZero" />
 
-    <com.example.numbergame.customViews.CustomTextView
+    <com.example.numbergame.customViews.CustomTextNumberView
         android:id="@+id/goal"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"

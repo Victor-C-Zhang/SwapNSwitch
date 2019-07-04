@@ -18,15 +18,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class NumberLevels extends AppCompatActivity {
+public class RedBlueLevels extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_number_levels);
+        setContentView(R.layout.activity_red_blue_levels);
         Scanner sc = new Scanner(System.in); //placeholder so the app compiles
         String fileName = this.getFilesDir().toString();
-        fileName+="/numberFile";
+        fileName+="/redBlueFile";
 
         Log.d("FILENAME", fileName);
 
@@ -34,7 +34,7 @@ public class NumberLevels extends AppCompatActivity {
         if (!file.exists()) { //switch to file.exists() to reconfigure numberFile
             try{
                 AssetManager am = this.getAssets();
-                sc = new Scanner(am.open("initNumberFile.txt"));
+                sc = new Scanner(am.open("initRedBlueFile.txt"));
                 Log.d("FILENAME",Boolean.toString(file.createNewFile()));
                 FileWriter initer = new FileWriter(file);
                 while (sc.hasNext()) {
@@ -66,7 +66,7 @@ public class NumberLevels extends AppCompatActivity {
                 int stars = sc.nextInt();
                 sc.nextLine();
                 String config = sc.nextLine();
-                arr.add(new Level(levelnum,config,stars,true,Level.MODE_NUMBER));
+                arr.add(new Level(levelnum,config,stars,true,Level.MODE_RED_BLUE));
             }
         }
         LevelAdapter levelAdapter = new LevelAdapter(this,arr);

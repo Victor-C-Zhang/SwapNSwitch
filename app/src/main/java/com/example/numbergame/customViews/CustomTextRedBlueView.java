@@ -6,30 +6,30 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
-import com.example.numbergame.GoalFragment;
-import com.example.numbergame.NumberActivity;
 import com.example.numbergame.R;
+import com.example.numbergame.RedBlueActivity;
+import com.example.numbergame.RedBlueGoalFragment;
 
 
-public class CustomTextView extends android.support.v7.widget.AppCompatTextView {
+public class CustomTextRedBlueView extends android.support.v7.widget.AppCompatTextView {
     private Context context;
-    private GoalFragment goalFrag;
-    public CustomTextView(Context context) {
+    private RedBlueGoalFragment goalFrag;
+    public CustomTextRedBlueView(Context context) {
         super(context);
         this.context = context;
     }
 
-    public CustomTextView(Context context, AttributeSet attrs) {
+    public CustomTextRedBlueView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
     }
 
-    public void setGoal(GoalFragment goalFrag){
+    public void setGoal(RedBlueGoalFragment goalFrag){
         this.goalFrag = goalFrag;
     }
     public boolean onTouchEvent(MotionEvent e){
         if (!goalFrag.isInited()) {
-            ((NumberActivity) context).initGoal();
+            ((RedBlueActivity) context).initGoal();
 
         }
         switch (e.getActionMasked()){

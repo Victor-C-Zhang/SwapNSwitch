@@ -88,5 +88,62 @@ public class LevelUpdater {
         catch (Exception e) {e.printStackTrace();}
         return temp.renameTo(file);
     }
+    public boolean updateRedBlueLevelStars(int levelNumber, int stars){
+        File file = new File(fileName+REDBLUEFILE);
+        File temp = new File(fileName+TEMP);
+        try {
+            fw = new FileWriter(temp);
+            sc = new Scanner(file);
+            String s;
+            int n = sc.nextInt();
+            sc.nextLine();
+            fw.write(Integer.toString(n));
+            fw.write(System.lineSeparator());
+            int seekNum = 2 + (levelNumber-1)*4;
+            for (int i=0;i<seekNum;i++) {
+                s = sc.nextLine();
+                fw.write(s);
+                fw.write(System.lineSeparator());
+            }
+            s = sc.nextLine();
+            if (Integer.parseInt(s)<stars) fw.write('0'+stars);
+            else fw.write(s);
+            fw.write(System.lineSeparator()); //line3 numStars
+            s = sc.nextLine();
+            fw.write(s);
+            fw.write(System.lineSeparator()); //line4 config
+            if (levelNumber!=n){
+                s = sc.nextLine();
+                fw.write(s);
+                fw.write(System.lineSeparator()); //line1 levelNum
+                s = sc.nextLine();
+                fw.write('1');
+                fw.write(System.lineSeparator()); //line2 unlocked
+                s = sc.nextLine();
+                fw.write(s);
+                fw.write(System.lineSeparator()); //line3 numStars
+                s = sc.nextLine();
+                fw.write(s);
+                fw.write(System.lineSeparator()); //line4 config
+                while (sc.hasNextLine()) {
+                    fw.write(sc.nextLine());
+                    fw.write(System.lineSeparator());
+                }
+                SharedPreferences preferences = context.getSharedPreferences("RedBlueGamePreferences", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putInt("levelNumber",levelNumber+1);
+                String configArr[] = s.split(" ");
+                for (int i=0;i<configArr.length;i++){
+                    editor.putInt(Integer.toString(i),Integer.parseInt(configArr[i]));
+                }
+                editor.commit();
+            }
+            fw.flush();
+            fw.close();
+        }
+        catch (Exception e) {e.printStackTrace();}
+        return temp.renameTo(file);
+    }
+
 }
 

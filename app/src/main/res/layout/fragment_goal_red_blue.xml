@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RedBlueActivity">
+
+    <View
+        android:id="@+id/grid"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:background="@drawable/three_by_three_grid"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.655" />
+
+    <com.example.numbergame.customViews.RedBlueView
+        android:id="@+id/colorZero"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/blue_circle"
+        app:ghost="@+id/ghostZero"
+        app:layout_constraintBottom_toTopOf="@+id/colorThree"
+        app:layout_constraintEnd_toStartOf="@+id/colorOne" />
+
+    <com.example.numbergame.customViews.RedBlueView
+        android:id="@+id/colorOne"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/blue_circle"
+        android:text="2"
+        android:textColor="@color/colorText"
+        android:textSize="40sp"
+        app:layout_constraintBottom_toTopOf="@+id/colorFour"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <com.example.numbergame.customViews.RedBlueView
+        android:id="@+id/colorTwo"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/blue_circle"
+        app:layout_constraintBottom_toTopOf="@+id/colorFive"
+        app:layout_constraintStart_toEndOf="@+id/colorOne" />
+
+    <com.example.numbergame.customViews.RedBlueView
+        android:id="@+id/colorThree"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/blue_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/grid"
+        app:layout_constraintEnd_toStartOf="@+id/colorFour"
+        app:layout_constraintTop_toTopOf="@+id/grid"/>
+
+    <com.example.numbergame.customViews.RedBlueView
+        android:id="@+id/colorFour"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:background="@drawable/blue_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/grid"
+        app:layout_constraintEnd_toEndOf="@+id/grid"
+        app:layout_constraintStart_toStartOf="@+id/grid"
+        app:layout_constraintTop_toTopOf="@+id/grid" />
+
+    <com.example.numbergame.customViews.RedBlueView
+        android:id="@+id/colorFive"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/blue_circle"
+        app:layout_constraintBottom_toBottomOf="@+id/grid"
+        app:layout_constraintStart_toEndOf="@+id/colorFour"
+        app:layout_constraintTop_toTopOf="@+id/grid" />
+
+    <com.example.numbergame.customViews.RedBlueView
+        android:id="@+id/colorSix"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/blue_circle"
+        app:layout_constraintEnd_toStartOf="@+id/colorSeven"
+        app:layout_constraintTop_toBottomOf="@+id/colorThree" />
+
+    <com.example.numbergame.customViews.RedBlueView
+        android:id="@+id/colorSeven"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/blue_circle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/colorFour" />
+
+    <com.example.numbergame.customViews.RedBlueView
+        android:id="@+id/colorEight"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/blue_circle"
+        app:layout_constraintStart_toEndOf="@+id/colorSeven"
+        app:layout_constraintTop_toBottomOf="@+id/colorFive" />
+
+</android.support.constraint.ConstraintLayout>

@@ -3,8 +3,6 @@ package com.example.numbergame.levelSetup;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
-import android.provider.ContactsContract;
 import android.support.constraint.ConstraintLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +14,7 @@ import android.widget.TextView;
 
 import com.example.numbergame.NumberActivity;
 import com.example.numbergame.R;
+import com.example.numbergame.RedBlueActivity;
 
 import java.util.ArrayList;
 
@@ -23,10 +22,6 @@ public class LevelAdapter extends ArrayAdapter<Level> {
     private Context context;
     public LevelAdapter(Context context, ArrayList<Level> levels) {
         super(context, 0, levels);
-        this.context=context;
-    }
-    public LevelAdapter(Context context, LevelSet levelSet){
-        super(context, 0,levelSet.levels);
         this.context=context;
     }
     @Override
@@ -73,18 +68,34 @@ public class LevelAdapter extends ArrayAdapter<Level> {
                     // Access the row position here to get the correct data item
                     Level level = getItem(position);
                     // Do what you want here...
-                    String prefFile = "NumberGamePreferences";
-                    SharedPreferences preferences = context.getSharedPreferences(prefFile, Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.clear();
-                    editor.putInt("levelNumber",level.getLevelNumber());
-                    int arr[][] = level.getConfig();
-                    for (int i = 0; i < arr.length; i++)
-                        for (int j = 0; j < arr[i].length; j++)
-                            editor.putInt(Integer.toString(i * arr.length + j), arr[i][j]);
-                    editor.commit();
-                    Intent i = new Intent(context, NumberActivity.class);
-                    context.startActivity(i);
+                    if (level.getMode()==Level.MODE_NUMBER) {
+                        String prefFile = "NumberGamePreferences";
+                        SharedPreferences preferences = context.getSharedPreferences(prefFile, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+                        editor.putInt("levelNumber", level.getLevelNumber());
+                        int arr[][] = level.getConfig();
+                        for (int i = 0; i < arr.length; i++)
+                            for (int j = 0; j < arr[i].length; j++)
+                                editor.putInt(Integer.toString(i * arr.length + j), arr[i][j]);
+                        editor.commit();
+                        Intent i = new Intent(context, NumberActivity.class);
+                        context.startActivity(i);
+                    }
+                    else if (level.getMode()== Level.MODE_RED_BLUE) {
+                        String prefFile = "RedBlueGamePreferences";
+                        SharedPreferences preferences = context.getSharedPreferences(prefFile, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.clear();
+                        editor.putInt("levelNumber", level.getLevelNumber());
+                        int arr[][] = level.getConfig();
+                        for (int i = 0; i < arr.length; i++)
+                            for (int j = 0; j < arr[i].length; j++)
+                                editor.putInt(Integer.toString(i * arr.length + j), arr[i][j]);
+                        editor.commit();
+                        Intent i = new Intent(context, RedBlueActivity.class);
+                        context.startActivity(i);
+                    }
                 }
             });
         }

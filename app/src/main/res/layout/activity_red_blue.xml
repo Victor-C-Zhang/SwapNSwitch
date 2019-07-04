@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RedBlueActivity">
@@ -327,5 +328,32 @@
         app:backgroundTint="@color/colorGray"
         app:layout_constraintBottom_toTopOf="@+id/colorZero"
         app:layout_constraintStart_toStartOf="@+id/colorZero" />
+    <com.example.numbergame.customViews.CustomTextRedBlueView
+        android:id="@+id/goal"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="41dp"
+        android:layout_marginStart="-30dp"
+        android:layout_marginBottom="70dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:text="GOAL"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
+        app:backgroundTint="@color/colorAccentDark"
+        app:layout_constraintBottom_toTopOf="@+id/ghostTwo"
+        app:layout_constraintStart_toStartOf="@+id/ghostTwo" />
+
+    <View
+        android:id="@+id/dimmer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black"
+        android:alpha="0.0"/>
+
+    <FrameLayout
+        android:id="@+id/placehholderFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
